@@ -95,16 +95,20 @@ public class Main {
     }
 
     private static String readNewTrackingNumber() {
-        while (true) {
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
             String trackingNumber = InputHelper.readLineOrCancel("Enter Tracking Number (ABC + 4 digits): ");
             if (!Parcel.isValidTrackingNumber(trackingNumber)) {
                 System.out.println("Invalid format! Use ABC followed by exactly four digits (example: ABC0001).");
             } else if (manager.trackingNumberExists(trackingNumber)) {
                 System.out.println("Duplicate tracking number! Please use a different one.");
             } else {
+                isValidInput = true;
                 return trackingNumber;
             }
         }
+        return null;
     }
 
     private static Parcel createDocument(String trackingNumber, String receiverName) throws InvalidParcelException {
@@ -135,24 +139,30 @@ public class Main {
     }
 
     private static double readWeight(double maxWeight, String typeName) {
-        while (true) {
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
             double weight = InputHelper.readDouble("Enter Actual Weight (kg): ");
             if (weight <= 0) {
                 System.out.println("Weight must be greater than 0 kg.");
             } else if (weight > maxWeight) {
                 System.out.println(typeName + " weight must not exceed " + maxWeight + " kg.");
             } else {
+                isValidInput = true;
                 return weight;
             }
         }
+        return 0.0;
     }
 
     private static void chooseDeliveryServiceFor(Parcel parcel) {
-        while (true) {
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
             DeliveryService selected = readDeliveryService();
             try {
                 parcel.changeDeliveryService(selected);
-                return;
+                isValidInput = true;
             } catch (DeliveryServiceNotAllowedException e) {
                 System.out.println(e.getMessage());
             }
@@ -196,16 +206,20 @@ public class Main {
     }
 
     private static Parcel readExistingParcel() {
-        while (true) {
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
             String trackingNumber = InputHelper.readLineOrCancel("Enter Tracking Number: ");
             Parcel parcel = manager.findParcel(trackingNumber);
 
             if (parcel != null) {
+                isValidInput = true;
                 return parcel;
             }
 
             System.out.println("Parcel not found!");
         }
+        return null;
     }
 
     private static void changeDeliveryService() {
@@ -221,20 +235,23 @@ public class Main {
 
         Design.printHeaderBanner("CHANGE DELIVERY SERVICE");
 
-        Parcel parcel;
-        while (true) {
+        Parcel parcel = null;
+
+        boolean isValidInput = false;
+        while (!isValidInput) {
             parcel = readExistingParcel();
 
             if (parcel.getStatus() != ParcelStatus.DELIVERED) {
-                break;
+                isValidInput = true;
+            } else {
+                System.out.println("Parcel already delivered!");
             }
-
-            System.out.println("Parcel already delivered!");
         }
 
         Design.printParcelDetails(parcel, "PARCEL DETAILS");
 
-        while (true) {
+        boolean isValidChoice = false;
+        while (!isValidChoice) {
             DeliveryService selected = readDeliveryService();
 
             try {
@@ -261,15 +278,16 @@ public class Main {
 
         Design.printHeaderBanner("MARK AS DELIVERED");
 
-        while (true) {
+        boolean isValidInput = false;
+        while (!isValidInput) {
             Parcel parcel = readExistingParcel();
 
             if (parcel.markAsDelivered()) {
                 System.out.println("Parcel delivered successfully!");
-                break;
+                isValidInput = true;
+            } else {
+                System.out.println("Parcel was already delivered.");
             }
-
-            System.out.println("Parcel was already delivered.");
         }
 
         System.out.println();

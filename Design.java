@@ -172,16 +172,9 @@ public class Design {
 
     public static void printParcelDetails(Parcel parcel, String title) {
         String[] labels = {"Tracking No.", "Type", "Receiver", "Actual Weight", "Chargeable Weight", "Service", "Delivery Fee", "Status"};
-        String[] values = {
-            parcel.getTrackingNumber(),
-            parcel.getParcelType(),
-            parcel.getReceiverName(),
-            formatWeight(parcel.getWeight()),
-            formatWeight(parcel.calculateChargeableWeight()),
-            parcel.getDeliveryService().toString(),
-            formatMoney(parcel.getDeliveryFee()),
-            parcel.getStatus().toString()
-        };
+        String[] values = {parcel.getTrackingNumber(), parcel.getParcelType(), parcel.getReceiverName(), formatWeight(parcel.getWeight()), 
+            formatWeight(parcel.calculateChargeableWeight()), parcel.getDeliveryService().toString(), 
+            formatMoney(parcel.getDeliveryFee()), parcel.getStatus().toString()};
 
         int maxLabelLength = 0;
 
